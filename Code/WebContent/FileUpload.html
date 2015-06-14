@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FileUpload Page</title>
+</head>
+<body>
+<script src="js/jquery-2.1.0.js"></script>
+<input type="hidden" name="file_base64" id="file_base64">
+<input type="file" id="fileup">
+<input type="button" value="submit" onclick="uploadFile()">
+<script>
+$(document).ready(function(){
+    $("#fileup").change(function(){
+        var v = $(this).val();
+        var reader = new FileReader();
+        reader.readAsDataURL(this.files[0]);
+        reader.onload = function(e){
+            console.log(e.target.result);
+            $('#file_base64').val(e.target.result);
+        };
+    });
+});
+function uploadFile() {
+	var fileBase64 = $('#file_base64').val();
+	$.ajax({  
+         url: "http://localhost:8180/casmd/services/AnalysisService/CheckByUploadFile",  
+         type: "POST",  
+         dataType: "json",  
+         contentType: "application/json; charset=utf-8",  
+         data: "{fileBase64:'" + fileBase64 + "',fileMD5:'123456'}",
+         beforeSend: function(x) {  
+             x.setRequestHeader("Content-Type", "application/json; charset=utf-8");  
+         },  
+         success: function(json) {  
+             alert(json.status);  
+         },  
+         error: function(x, e) {  
+        	 alert(2);
+             alert(x.responseText);  
+         },  
+         complete: function(x) {  
+             alert(x.responseText);  
+         }  
+     });  
+}
+
+</script>
+</body>
+</html>
