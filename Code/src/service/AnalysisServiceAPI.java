@@ -42,7 +42,7 @@ public class AnalysisServiceAPI {
 			Matcher matcher = pattern.matcher(fileBase64);
 			fileBase64 = matcher.replaceAll("");
 			//FileOutputStream write = new FileOutputStream(new File("./" + fileMD5));
-			FileOutputStream write = new FileOutputStream(new File("/Users/Water/Desktop/SE/Project/casmd/UploadFile/" + fileMD5 + ".docx"));
+			FileOutputStream write = new FileOutputStream(new File("/Users/Water/Desktop/SE/Project/casmd/UploadFile/" + fileMD5 + ".apk"));
 			write.write(decoderBytes);
 			write.close();
 		} catch (Exception e) {

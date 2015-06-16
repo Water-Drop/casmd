@@ -16,3 +16,5 @@ Code/.settings/org.eclipse.wst.jsdt.ui.superType.container
 Code/.settings/org.eclipse.wst.jsdt.ui.superType.name
 
 Code/WebContent/META-INF/MANIFEST.MF
+
+*.apk
