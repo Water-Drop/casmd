@@ -3,7 +3,9 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import model.VerifyFile;
 import util.JDBCHelper;
 
 public class AnalysisDAO {
@@ -27,5 +29,41 @@ public class AnalysisDAO {
 			jh.close(conn);
 		}
 		return rtn;
+	}
+	public Integer addAnalysisResult(VerifyFile vf){
+		Connection conn = null;
+		PreparedStatement ips = null;
+		PreparedStatement sps = null;
+		ResultSet rs = null;
+		Integer vid = -1;
+		try {
+			conn = jh.getConnection();
+			conn.setAutoCommit(false);
+			ips = conn.prepareStatement("INSERT INTO casmd.verifyfile (Level,FileMD5,FilePath,Status) VALUES (?,?,?,0)");
+			ips.setString(1,vf.getLevel());
+			ips.setString(2,vf.getFileMD5());
+			ips.setString(3,vf.getFilePath());
+			sps = conn.prepareStatement("SELECT LAST_INSERT_ID()");
+			ips.execute();
+			rs = sps.executeQuery();
+			conn.commit();
+			conn.setAutoCommit(true);
+			rs.last();
+			int count = rs.getRow();
+			if (count != 0){
+				rs.first();
+				vid = Integer.parseInt(rs.getBigDecimal(1).toString());
+				}
+			} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			jh.close(conn);
+		}
+		return vid;	
 	}
 }

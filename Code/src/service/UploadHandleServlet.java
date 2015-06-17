@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,9 +14,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.VerifyFile;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
+import util.MD5Helper;
+import biz.UploadBiz;
+import dao.AnalysisDAO;
 
 
 /**
@@ -23,6 +30,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  */
 @WebServlet("/UploadHandleServlet")
 public class UploadHandleServlet extends HttpServlet {
+	UploadBiz ub = new UploadBiz();
+	AnalysisDAO ad = new AnalysisDAO();
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -108,16 +117,29 @@ public class UploadHandleServlet extends HttpServlet {
                     out.close();
                     //删除处理文件上传时生成的临时文件
                     item.delete();
-                    message = "文件上传成功！";
+                    String check_result = ub.uploadFileToWebsite(savePath + "/" + filename, filename);
+                    VerifyFile vf = new VerifyFile();
+                    vf.setLevel(check_result);
+                    vf.setFilePath(savePath + "/" + filename);
+                    File MD5file = new File(savePath + "/" + filename);
+                    vf.setFileMD5(MD5Helper.GetFileMD5(MD5file));
+                    System.out.println(MD5Helper.GetFileMD5(MD5file));
+                    ad.addAnalysisResult(vf);
+                    PrintWriter pout = response.getWriter();
+                    pout.write("{\"fileMD5\":\"" + vf.getFileMD5() + "\",\"Result\":\"" + vf.getLevel() + "\"}");
+                    pout.flush();
+                    pout.close();
+                    //message = "文件上传成功！";
                 }
             }
         }catch (Exception e) {
-            message= "文件上传失败！";
+            //message= "文件上传失败！";
             e.printStackTrace();
             
         }
-        request.setAttribute("message",message);
+        //request.setAttribute("message",message);
         //request.getRequestDispatcher("/message.jsp").forward(request, response);
+        
      }     		
 
      private String makeFileName(String filename){  //2.jpg

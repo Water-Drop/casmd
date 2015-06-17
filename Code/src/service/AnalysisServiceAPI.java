@@ -34,7 +34,7 @@ public class AnalysisServiceAPI {
 		@SuppressWarnings({ "unchecked", "deprecation" })
 		List<String> fileMD5List = JSONArray.toList(fileMD5s);
 		List<String> fileLevelList = new ArrayList<String>();
-		Map<String, String> map = new HashMap<String, String>();
+		Map map = new HashMap<String, String>();
 		Integer status = -1;
 		if (fileMD5List.size() != 0){
 			for (int i = 0; i < fileMD5List.size(); i++){
@@ -54,7 +54,7 @@ public class AnalysisServiceAPI {
 				f_jsons.add(f_json.toString());
 			}		
 			JSONArray jsonArray = JSONArray.fromObject(f_jsons);
-			map.put("Results:", jsonArray.toString());
+			map.put("Results:", jsonArray);
 			status = 0;
 		}
 		map.put("status", status.toString());
