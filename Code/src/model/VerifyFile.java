@@ -4,6 +4,7 @@ public class VerifyFile {
 	private String FileMD5;
 	private Double Size;
 	private String FilePath;
+	private String Level;
 	public String getFileMD5() {
 		return FileMD5;
 	}
@@ -21,5 +22,11 @@ public class VerifyFile {
 	}
 	public void setFilePath(String filePath) {
 		FilePath = filePath;
+	}
+	public String getLevel() {
+		return Level;
+	}
+	public void setLevel(String level) {
+		Level = level;
 	}
 }
